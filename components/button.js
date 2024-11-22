@@ -2,15 +2,15 @@
 // StyleSheet define and manage styles in React Native.
 // Text is used to render text in the app.
 // TouchableOpacity is a wrapper which gives visual feedback when tapped on an element.
+import React from "react";
 import { Dimensions, StyleSheet, Text, TouchableOpacity } from "react-native";
 import { myColors } from "../styles/colors";
 
-// Four properties are defined that are needed to make the button component.
+// Three properties are defined that are needed to make the button component.
     // 'onPress' is a function that is called when the button is pressed.
     // 'text' is the label that is displayed on the button.
-    // 'size' is used to indicate the button size, either "normal" or "double".
     // 'theme' is used to change the button's appearance. 
-export default ({ onPress, text, size, theme }) => {
+export default ({ onPress, text, theme }) => {
     const buttonStyles = [styles.button]; // These arrays collect base styles and dynamically append additional styles to the button and text based on the properties.
     const textStyles = [styles.text];
 
