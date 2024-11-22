@@ -1,21 +1,35 @@
+// Dimentions used to access the screen width and height which helps in calculating responsive layouts.
+// StyleSheet define and manage styles in React Native.
+// Text is used to render text in the app.
+// TouchableOpacity is a wrapper which gives visual feedback when tapped on an element.
 import { Dimensions, StyleSheet, Text, TouchableOpacity } from "react-native";
+import { myColors } from "../styles/colors";
 
-// Four properties are defined that are needed to make the button component
+// Four properties are defined that are needed to make the button component.
+    // 'onPress' is a function that is called when the button is pressed.
+    // 'text' is the label that is displayed on the button.
+    // 'size' is used to indicate the button size, either "normal" or "double".
+    // 'theme' is used to change the button's appearance. 
 export default ({ onPress, text, size, theme }) => {
-    const buttonStyles = [styles.button];
+    const buttonStyles = [styles.button]; // These arrays collect base styles and dynamically append additional styles to the button and text based on the properties.
     const textStyles = [styles.text];
 
-    if (size === "double") {
-        buttonStyles.push(styles.buttonDouble);
-    }
-
-    if (theme === "secondary") {
+    // Logic for theme based styling
+    if (theme === "primary") {
+        buttonStyles.push(styles.buttonPrimary);
+        textStyles.push(styles.textPrimary);
+    } else if (theme === "secondary") {
         buttonStyles.push(styles.buttonSecondary);
         textStyles.push(styles.textSecondary);
-    } else if (theme === "accent") {
-        buttonStyles.push(styles.buttonAccent);
+    } else if (theme === "accentGreen") {
+        buttonStyles.push(styles.buttonAccentGreen);
+        textStyles.push(styles.textSecondary);
+    } else if (theme === "accentBlue") {
+        buttonStyles.push(styles.buttonAccentBlue);
+        textStyles.push(styles.textSecondary);
     }
 
+    // Return the button element created using TouchableOpacity wrapper that responds when pressed.(dimming effect)
     return (
         <TouchableOpacity onPress={onPress} style={buttonStyles}>
             <Text style={textStyles}>{text}</Text>
@@ -26,11 +40,13 @@ export default ({ onPress, text, size, theme }) => {
 
 // set dimmenstion
 const screen = Dimensions.get("window");
-const buttonWidth = screen.width / 4;
+const buttonWidth = screen.width / 4; // The button width is set as one-fourth of the screen width.
 
+// Define the styles for buttons and texts.
 const styles = StyleSheet.create({
+    // base style for buttons
     button: {
-        backgroundColor: "#333333",
+        backgroundColor: myColors.primary,
         flex: 1,
         height: Math.floor(buttonWidth - 10),
         alignItems: "center",
@@ -38,23 +54,30 @@ const styles = StyleSheet.create({
         borderRadius: Math.floor(buttonWidth),
         margin: 5,
     },
-    text: {
-        color: "#fff",
-        fontSize: 24,
+
+    // primary text style
+    textPrimary: {
+        color: myColors.textPrimary,
+        fontSize: 32,
     },
+
+    // secondary text style
     textSecondary: {
-        color: "#060606",
+        color: myColors.textSecondary,
+        fontSize: 32,
     },
-    buttonDouble: {
-        width: screen.width / 2 - 10,
-        flex: 0,
-        alignItems: "flex-start",
-        paddingLeft: 40,
+
+    // other button styles
+    buttonPrimary: {
+        backgroundColor: myColors.primary,
     },
     buttonSecondary: {
-        backgroundColor: "#a6a6a6",
+        backgroundColor: myColors.secondary,
     },
-    buttonAccent: {
-        backgroundColor: "#ffc107",
+    buttonAccentBlue: {
+        backgroundColor: myColors.accentBlue,
+    },
+    buttonAccentGreen: {
+        backgroundColor: myColors.accentGreen,
     },
 });
