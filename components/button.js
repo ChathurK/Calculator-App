@@ -1,3 +1,5 @@
+/* IM/2021/001 - Kumarasingha K.A.C. */
+
 // useRef is used to store a variable reference to a value.
 import React, { useRef } from "react";
 // Dimentions used to access the screen width and height which helps in calculating responsive layouts.
@@ -8,12 +10,14 @@ import React, { useRef } from "react";
 // Easing is used to define the speed of the animation.
 import { Dimensions, StyleSheet, Text, TouchableOpacity, Animated, Easing } from "react-native";
 import { myColors } from "../styles/colors";
+import { Icons } from "./icons";
 
 // Three properties are defined that are needed to make the button component.
     // 'onPress' is a function that is called when the button is pressed.
     // 'text' is the label that is displayed on the button.
     // 'theme' is used to change the button's appearance. 
-const Button = ({ onPress, text, theme }) => {
+    // 'iconName' is used to display the relevent icon on the button.
+const Button = ({ onPress, text, theme, iconName }) => {
     // useRef is used to store the reference of the animated value.
     // Animated.Value is initialized to half of the button's width.
     const borderRadius = useRef(new Animated.Value(buttonWidth / 2)).current;
@@ -57,6 +61,9 @@ const Button = ({ onPress, text, theme }) => {
     } else if (theme === "accentBlue") {
         buttonStyles.push(styles.buttonAccentBlue);
         textStyles.push(styles.textSecondary);
+    } else if (theme === "extra") {
+        buttonStyles.push(styles.buttonExtra);
+        textStyles.push(styles.textPrimary);
     }
 
     // Return the button element created using TouchableOpacity wrapper that responds when pressed.(dimming effect)
@@ -65,8 +72,11 @@ const Button = ({ onPress, text, theme }) => {
             onPress={onPress}
             onPressIn={handlePressIn}
             onPressOut={handlePressOut}
-            style={buttonStyles}>
-            <Text style={textStyles}>{text}</Text>
+            style={buttonStyles}
+            activeOpacity={0.6}>
+            
+            {iconName ? <Icons name={iconName} /> : <Text style={textStyles}>{text}</Text>}
+
         </TouchableOpacity>
     );
 };
@@ -115,6 +125,10 @@ const styles = StyleSheet.create({
     },
     buttonAccentGreen: {
         backgroundColor: myColors.accentGreen,
+    },
+    buttonExtra: {
+        backgroundColor: myColors.extra,
+        height: Math.floor(buttonWidth / 2),
     },
 });
 
