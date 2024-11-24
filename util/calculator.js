@@ -1,3 +1,5 @@
+/* IM/2021/001 - Kumarasingha K.A.C. */
+
 export const initialState = {
     currentValue: "0",
     operator: null,

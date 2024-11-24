@@ -1,3 +1,5 @@
+/* IM/2021/001 - Kumarasingha K.A.C. */
+
 import { StyleSheet, View } from "react-native";
 
 // 'Row' component is a functional component that takes a signle property 'children'
