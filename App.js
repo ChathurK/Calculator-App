@@ -22,12 +22,15 @@ export default class App extends Component {
     return (
       <SafeAreaView style={styles.window}>
         <StatusBar style="auto" />
-          <View style={styles.textArea}>
-            <Text style={styles.value}>
-              {parseFloat(this.state.currentValue).toLocaleString()}
-            </Text>
-          </View>
-          
+        <View style={styles.textArea}>
+          <Text style={styles.primaryTextArea}>
+            {this.state.previousValue} {this.state.operator} {this.state.currentValue}
+          </Text>
+          <Text style={styles.secondaryTextArea}>
+            {this.state.currentValue.toLocaleString()}
+          </Text>
+        </View>
+
         <View style={styles.buttonArea}>
           <Row>
             <Button iconName="square-root" theme="extra" onPress={() => this.HandleTap("operator", "sqrt")} />
@@ -40,7 +43,7 @@ export default class App extends Component {
             <Button text="AC" theme="accentBlue" onPress={() => this.HandleTap("clear")} />
             <Button iconName="plus-minus" theme="secondary" onPress={() => this.HandleTap("posneg")} />
             <Button text="%" theme="secondary" onPress={() => this.HandleTap("percentage")} />
-            <Button iconName="division" theme="secondary" onPress={() => this.HandleTap("operator", "/")} />
+            <Button iconName="slash-forward" theme="secondary" onPress={() => this.HandleTap("operator", "/")} />
           </Row>
 
           <Row>
@@ -71,7 +74,7 @@ export default class App extends Component {
             <Button iconName="equal" theme="accentGreen" onPress={() => this.HandleTap("equal", "=")} />
           </Row>
         </View>
-        
+
       </SafeAreaView>
     );
   }
@@ -95,11 +98,20 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     padding: 5,
   },
-  value: {
+  primaryTextArea: {
     color: myColors.textSecondary,
-    fontSize: 42,
+    fontSize: 64,
+    textAlign: "right",
+    marginTop: 10,
+    marginRight: 20,
+    marginLeft: 10,
+  },
+  secondaryTextArea: {
+    color: myColors.textPrimary,
+    fontSize: 48,
     textAlign: "right",
     marginRight: 20,
     marginBottom: 10,
+    marginLeft: 10,
   },
 });

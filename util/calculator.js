@@ -6,11 +6,14 @@ export const initialState = {
     previousValue: null,
 };
 
+// handle numerical inputs.
 export const handleNumber = (value, state) => {
+    // if the current value in the state is 0, set the current value to the input value.
     if (state.currentValue === "0") {
         return { currentValue: `${value}` };
     }
 
+    // if the current value is not 0, append the input value to the current value.
     return {
         currentValue: `${state.currentValue}${value}`,
     };

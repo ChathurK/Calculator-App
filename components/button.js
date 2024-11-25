@@ -22,12 +22,12 @@ const Button = ({ onPress, text, theme, iconName }) => {
     // Animated.Value is initialized to half of the button's width.
     const borderRadius = useRef(new Animated.Value(buttonWidth / 2)).current;
     
-    /* animation for the button when pressed: when pressed, border radius changes to a quaeter of the button width over 200 milliseconds
+    /* animation for the button when pressed: when pressed, border radius changes to a quaeter of the button width over 100 milliseconds
     with a linear easing function. The animation is run on the native thread for better performance. */
     const handlePressIn = () => {
         Animated.timing(borderRadius, {
             toValue: buttonWidth / 4,
-            duration: 200,
+            duration: 100,
             easing: Easing.linear,
             useNativeDriver: true,
         }).start();
