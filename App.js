@@ -5,8 +5,9 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import Button from "./components/button";
 import Row from "./components/row";
-import calculator, { initialState } from "./util/calculator";
+import calculator, { initialState,formatNumber } from "./util/calculator";
 import { myColors } from "./styles/colors";
+import { evaluate, format } from "mathjs";
 
 // create class component of App
 export default class App extends Component {
@@ -14,20 +15,46 @@ export default class App extends Component {
 
   // handle tap method
   HandleTap = (type, value) => {
-    this.setState((state) => calculator(type, value, state));
+    this.setState((state) => {
+      const newState = calculator(type, value, state);
+      let result = "";
+      try {
+        result = evaluate(newState.expression);
+      } catch (error) {
+        result = "";
+      }
+      return { ...newState, result };
+    });
   };
+
+  /* HandleTap = (type, value) => {
+    this.setState((state) => calculator(type, value, state));
+  }; */
 
   // render method
   render() {
+    const formattedCurrentValue = this.state.currentValue.toLocaleString();
+    const formattedResult = this.state.result ? this.state.result.toLocaleString(navigator.language, { maximumFractionDigits: 2 }) : "";
+
+/*     let result = "";
+    try {
+      result = evaluate(this.state.expression);
+    } catch (error) {
+      result = "";
+    } */
+
     return (
       <SafeAreaView style={styles.window}>
         <StatusBar style="auto" />
         <View style={styles.textArea}>
           <Text style={styles.primaryTextArea}>
-            {this.state.previousValue} {this.state.operator} {this.state.currentValue}
+            {this.state.expression.split(" ").map(formatNumber).join(" ")}
+            {/* {this.state.expression.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} */}
           </Text>
           <Text style={styles.secondaryTextArea}>
-            {this.state.currentValue.toLocaleString()}
+            {/* {result.toLocaleString(navigator.language, { maximumFractionDigits: 2 })} */}
+            {/* {formattedResult} */}
+            {this.state.operator === null ? "" : formattedResult}
           </Text>
         </View>
 
@@ -74,7 +101,6 @@ export default class App extends Component {
             <Button iconName="equal" theme="accentGreen" onPress={() => this.HandleTap("equal", "=")} />
           </Row>
         </View>
-
       </SafeAreaView>
     );
   }
