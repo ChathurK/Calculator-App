@@ -1,17 +1,18 @@
 /* IM/2021/001 - Kumarasingha K.A.C. */
 
 import { evaluate } from "mathjs";
+import { myColors } from "../styles/colors";
 
 export const initialState = {
     currentValue: "0",
     operator: null,
     previousValue: null,
     expression: "",
+    error: false,
 };
 
 // helper function to format numbers with thousand separators.
 export const formatNumber = (num) => {
-    // return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     const [integer, decimal] = num.toString().split('.');
     const formattedInteger = integer.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return decimal ? `${formattedInteger}.${decimal}` : formattedInteger;
@@ -44,47 +45,34 @@ export const handleBackspace = (state) => {
 const handleEqual = (state) => {
     try {
         const result = evaluate(state.expression);
+        if (result === Infinity || result === -Infinity || isNaN(result)) {
+            return {
+                currentValue: "Cannot divide by 0",
+                expression: "",
+                operator: null,
+                previousValue: null,
+                result: "",
+                error: true,
+            };
+        }
         return {
             currentValue: `${result}`,
             expression: `${result}`,
             operator: null,
             previousValue: null,
-            result: "", 
+            result: "",
+            error: false,
         };
     } catch (error) {
-        return state;
+        return {
+            currentValue: "Cannot divide by 0",
+            expression: "",
+            operator: null,
+            previousValue: null,
+            result: "",
+            error: true,
+        };
     }
-    /* const { currentValue, previousValue, operator } = state;
-
-    const current = parseFloat(currentValue);
-    const previous = parseFloat(previousValue);
-    const resetState = { operator: null, previousValue: null };
-
-    switch (operator) {
-        case "+":
-            return {
-                currentValue: `${previous + current}`,
-                ...resetState,
-            };
-        case "-":
-            return {
-                currentValue: `${previous - current}`,
-                ...resetState,
-            };
-        case "*":
-            return {
-                currentValue: `${previous * current}`,
-                ...resetState,
-            };
-        case "/":
-            return {
-                currentValue: `${previous / current}`,
-                ...resetState,
-            };
-
-        default:
-            return state;
-    } */
 };
 
 // calculator function
@@ -108,7 +96,6 @@ const calculator = (type, value, state) => {
             return {
                 operator: value,
                 previousValue: state.currentValue,
-                // currentValue: "0",
                 currentValue: state.currentValue,
                 expression: `${state.expression} ${value} `,
             };

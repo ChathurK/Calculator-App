@@ -7,7 +7,7 @@ import Button from "./components/button";
 import Row from "./components/row";
 import calculator, { initialState,formatNumber } from "./util/calculator";
 import { myColors } from "./styles/colors";
-import { evaluate, format } from "mathjs";
+import { evaluate } from "mathjs";
 
 // create class component of App
 export default class App extends Component {
@@ -20,40 +20,33 @@ export default class App extends Component {
       let result = "";
       try {
         result = evaluate(newState.expression);
+        if (newState.expression.includes("/0")) {
+          newState.error = true;
+          result = "Can't divide by 0";
+        } else {
+          newState.error = false;
+        }
       } catch (error) {
-        result = "";
+        newState.error = true;
+        result = "Can't divide by 0";
       }
       return { ...newState, result };
     });
   };
-
-  /* HandleTap = (type, value) => {
-    this.setState((state) => calculator(type, value, state));
-  }; */
 
   // render method
   render() {
     const formattedCurrentValue = this.state.currentValue.toLocaleString();
     const formattedResult = this.state.result ? this.state.result.toLocaleString(navigator.language, { maximumFractionDigits: 2 }) : "";
 
-/*     let result = "";
-    try {
-      result = evaluate(this.state.expression);
-    } catch (error) {
-      result = "";
-    } */
-
     return (
       <SafeAreaView style={styles.window}>
         <StatusBar style="auto" />
         <View style={styles.textArea}>
-          <Text style={styles.primaryTextArea}>
+          <Text id="primaryTextArea" style={styles.primaryTextArea}>
             {this.state.expression.split(" ").map(formatNumber).join(" ")}
-            {/* {this.state.expression.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} */}
           </Text>
-          <Text style={styles.secondaryTextArea}>
-            {/* {result.toLocaleString(navigator.language, { maximumFractionDigits: 2 })} */}
-            {/* {formattedResult} */}
+          <Text id="secondaryTextArea" style={[styles.secondaryTextArea, this.state.error && { color: myColors.errorOrange }]}>
             {this.state.operator === null ? "" : formattedResult}
           </Text>
         </View>
