@@ -11,7 +11,6 @@ export const initialState = {
 
 // helper function to format numbers with thousand separators.
 export const formatNumber = (num) => {
-    // return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     const [integer, decimal] = num.toString().split('.');
     const formattedInteger = integer.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     return decimal ? `${formattedInteger}.${decimal}` : formattedInteger;
@@ -43,6 +42,15 @@ export const handleBackspace = (state) => {
 
 const handleEqual = (state) => {
     try {
+        if (/\/ 0($|\D)/.test(state.expression)) {
+            return {
+                currentValue: "Can't divide by 0",
+                expression: "Can't divide by 0",
+                operator: null,
+                previousValue: null,
+                result: "",
+            };
+        }
         const result = evaluate(state.expression);
         return {
             currentValue: `${result}`,
@@ -54,37 +62,6 @@ const handleEqual = (state) => {
     } catch (error) {
         return state;
     }
-    /* const { currentValue, previousValue, operator } = state;
-
-    const current = parseFloat(currentValue);
-    const previous = parseFloat(previousValue);
-    const resetState = { operator: null, previousValue: null };
-
-    switch (operator) {
-        case "+":
-            return {
-                currentValue: `${previous + current}`,
-                ...resetState,
-            };
-        case "-":
-            return {
-                currentValue: `${previous - current}`,
-                ...resetState,
-            };
-        case "*":
-            return {
-                currentValue: `${previous * current}`,
-                ...resetState,
-            };
-        case "/":
-            return {
-                currentValue: `${previous / current}`,
-                ...resetState,
-            };
-
-        default:
-            return state;
-    } */
 };
 
 // calculator function
@@ -108,7 +85,6 @@ const calculator = (type, value, state) => {
             return {
                 operator: value,
                 previousValue: state.currentValue,
-                // currentValue: "0",
                 currentValue: state.currentValue,
                 expression: `${state.expression} ${value} `,
             };

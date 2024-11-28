@@ -19,7 +19,12 @@ export default class App extends Component {
       const newState = calculator(type, value, state);
       let result = "";
       try {
+        // Check if the expression contains a division by zero
+        if (/\/ 0($|\D)/.test(newState.expression)) {
+          result = "Can't divide by 0";
+        } else {
         result = evaluate(newState.expression);
+        }
       } catch (error) {
         result = "";
       }
@@ -27,21 +32,10 @@ export default class App extends Component {
     });
   };
 
-  /* HandleTap = (type, value) => {
-    this.setState((state) => calculator(type, value, state));
-  }; */
-
   // render method
   render() {
     const formattedCurrentValue = this.state.currentValue.toLocaleString();
     const formattedResult = this.state.result ? this.state.result.toLocaleString(navigator.language, { maximumFractionDigits: 2 }) : "";
-
-/*     let result = "";
-    try {
-      result = evaluate(this.state.expression);
-    } catch (error) {
-      result = "";
-    } */
 
     return (
       <SafeAreaView style={styles.window}>
@@ -49,20 +43,17 @@ export default class App extends Component {
         <View style={styles.textArea}>
           <Text style={styles.primaryTextArea}>
             {this.state.expression.split(" ").map(formatNumber).join(" ")}
-            {/* {this.state.expression.replace(/\B(?=(\d{3})+(?!\d))/g, ",")} */}
           </Text>
           <Text style={styles.secondaryTextArea}>
-            {/* {result.toLocaleString(navigator.language, { maximumFractionDigits: 2 })} */}
-            {/* {formattedResult} */}
-            {this.state.operator === null ? "" : formattedResult}
+            {this.state.result}
           </Text>
         </View>
 
         <View style={styles.buttonArea}>
           <Row>
-            <Button iconName="square-root" theme="extra" onPress={() => this.HandleTap("operator", "sqrt")} />
+            <Button text="√" theme="extra" onPress={() => this.HandleTap("operator", "sqrt")} />
             <Button text="π" theme="extra" onPress={() => this.HandleTap("operator", "pi")} />
-            <Button iconName="exponent" theme="extra" onPress={() => this.HandleTap("operator", "^")} />
+            <Button iconName="chevron-up" theme="extra" onPress={() => this.HandleTap("operator", "^")} />
             <Button iconName="exclamation" theme="extra" onPress={() => this.HandleTap("operator", "!")} />
           </Row>
 
