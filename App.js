@@ -28,6 +28,12 @@ export default class App extends Component {
       } catch (error) {
         result = "";
       }
+
+      // clear the result field after setting the new state
+      if (type === "equal") {
+        return { ...newState, result: "" };
+      }
+
       return { ...newState, result };
     });
   };
@@ -137,6 +143,7 @@ const styles = StyleSheet.create({
     fontSize: 64,
     textAlign: "right",
     whiteSpace: "nowrap", // ensure text stays on one line
+    paddingTop: 30,
   },
   secondaryTextArea: {
     color: myColors.textPrimary,

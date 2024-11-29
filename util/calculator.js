@@ -16,12 +16,39 @@ export const formatNumber = (num) => {
     return decimal ? `${formattedInteger}.${decimal}` : formattedInteger;
 }
 
+// helper function to check if the last character is an operator.
+const isLastCharOperator = (expression) => {
+    return /[+\-*/%!^]$/.test(expression.trim());
+};
+
 // handle numerical inputs.
 export const handleNumber = (value, state) => {
     // reset input to 15 digits
     if (state.currentValue.replace(/\D/g, '').length >= 15) {
         return state;
     }
+
+    // prevent multiple decimal points
+    if (value === "." && state.currentValue.includes(".")) {
+        return state;
+    }
+
+    // Handle the case where the decimal point is the first character
+    if (value === "." && state.currentValue === "0") {
+        return {
+            currentValue: "0.",
+            expression: `${state.expression}0.`,
+        };
+    }
+
+    // Handle appending the decimal point to an existing number
+    if (value === ".") {
+        return {
+            currentValue: `${state.currentValue}${value}`,
+            expression: `${state.expression}${value}`,
+        };
+    }
+
     // if the current value in the state is 0, set the current value to the input value.
     if (state.currentValue === "0" && state.operator === null) {
         return { currentValue: `${value}`, expression: `${value}` };
@@ -50,7 +77,18 @@ const handleOperator = (value, state) => {
         return state;
     }
 
+    // Ensure only one binary operator is allowed consecutively
+    const expression = state.expression.trim();
+    if (isLastCharOperator(expression)) {
+        return {
+            ...state,
+            operator: value,
+            expression: expression.slice(0, -1) + value, // Replace the last operator
+        };
+    }
+
     return {
+        ...state,
         operator: value,
         previousValue: state.currentValue,
         currentValue: "0",
@@ -60,21 +98,13 @@ const handleOperator = (value, state) => {
 
 
 const handleEqual = (state) => {
-    // Prevent calculation if the expression is incomplete
-    if (state.expression.trim() === "" || /[+\-*/%]$/.test(state.expression)) {
+    if (state.expression.trim() === "" || isLastCharOperator(state.expression)) {
         return state; // no action if the expression is incomplete
     }
 
     try {
-        let result = "";
-        if (state.operator === "sqrt") {
-            const number = parseFloat(state.currentValue);
-            result = Math.sqrt(number);
-        } else {
-            result = evaluate(state.expression);
-        }
-        
-        // Round the result to 2 decimal places
+        let result = evaluate(state.expression);
+        // Round the result to 15 decimal places
         result = round(result, 15);
 
         return {
@@ -82,7 +112,7 @@ const handleEqual = (state) => {
             expression: `${result}`,
             operator: null,
             previousValue: null,
-            result: "",
+            // result: "",
         };
     } catch (error) {
         return state;
@@ -95,12 +125,16 @@ const calculator = (type, value, state) => {
         case "number":
             return handleNumber(value, state);
         case "sqrt":
+            // Only add square root if it’s not duplicating
+            if (!isLastCharOperator(state.expression)) {
             return {
                 operator: "sqrt",
                 previousValue: "0",
                 currentValue: "",
                 expression: `${state.expression} √`,
-            };
+                };
+            }
+            return state;
 
         case "pi":
             return {
@@ -115,10 +149,14 @@ const calculator = (type, value, state) => {
                 expression: `${state.expression} * -1`,
             };
         case "percentage":
+            // Only add percentage if it's not duplicating
+            if (!isLastCharOperator(state.expression)) {
             return {
                 currentValue: `${parseFloat(state.currentValue) * 0.01}`,
                 expression: `${state.expression} * 0.01`,
-            };
+                };
+            }
+            return state;
         case "operator":
             return handleOperator(value, state);
         case "equal":
