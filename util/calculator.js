@@ -1,7 +1,5 @@
 /* IM/2021/001 - Kumarasingha K.A.C. */
 
-import { evaluate, re } from "mathjs";
-
 export const initialState = {
     currentValue: "0",
     operator: null,
@@ -54,7 +52,6 @@ const handleOperator = (value, state) => {
     };
 };
 
-
 const handleEqual = (state) => {
     // Prevent calculation if the expression is incomplete
     if (state.expression.trim() === "" || /[+\-*/%]$/.test(state.expression)) {
@@ -67,10 +64,9 @@ const handleEqual = (state) => {
             const number = parseFloat(state.currentValue);
             result = Math.sqrt(number);
         } else {
-            result = evaluate(state.expression);
+            result = eval(state.expression.replace(/×/g, '*').replace(/÷/g, '/'));
         }
         
-        // const result = evaluate(state.expression);
         return {
             currentValue: `${result}`,
             expression: `${result}`,

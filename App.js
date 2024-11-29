@@ -5,15 +5,15 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaView, StyleSheet, Text, View, ScrollView } from "react-native";
 import Button from "./components/button";
 import Row from "./components/row";
-import calculator, { initialState,formatNumber } from "./util/calculator";
+import calculator, { initialState, formatNumber } from "./util/calculator";
 import { myColors } from "./styles/colors";
-import { evaluate, format } from "mathjs";
 
 // create class component of App
 export default class App extends Component {
+  // initialize App component's state
   state = initialState;
 
-  // handle tap method
+  // method to handle button taps
   HandleTap = (type, value) => {
     this.setState((state) => {
       const newState = calculator(type, value, state);
@@ -23,7 +23,7 @@ export default class App extends Component {
         if (/\/ 0($|\D)/.test(newState.expression)) {
           result = "Can't divide by 0";
         } else {
-        result = evaluate(newState.expression);
+          result = eval(newState.expression.replace(/×/g, '*').replace(/÷/g, '/'));
         }
       } catch (error) {
         result = "";
