@@ -23,7 +23,7 @@ export default class App extends Component {
         if (/\/ 0($|\D)/.test(newState.expression)) {
           result = "Can't divide by 0";
         } else {
-        result = evaluate(newState.expression);
+          result = evaluate(newState.expression);
         }
       } catch (error) {
         result = "";

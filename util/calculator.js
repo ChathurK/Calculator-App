@@ -1,6 +1,6 @@
 /* IM/2021/001 - Kumarasingha K.A.C. */
 
-import { evaluate, round } from "mathjs";
+import { evaluate, expression, round } from "mathjs";
 
 export const initialState = {
     currentValue: "0",
@@ -87,6 +87,16 @@ const handleOperator = (value, state) => {
         };
     }
 
+    // Handle square root operator
+    if (value === "sqrt") {
+        const result = round(Math.sqrt(parseFloat(state.currentValue)), 15);
+        return {
+            ...state,
+            currentValue: `${result}`,
+            expression: `${state.expression} sqrt(${state.currentValue})`,
+        };
+    }
+
     return {
         ...state,
         operator: value,
@@ -125,15 +135,19 @@ const calculator = (type, value, state) => {
         case "number":
             return handleNumber(value, state);
         case "sqrt":
-            // Only add square root if it’s not duplicating
-            if (!isLastCharOperator(state.expression)) {
+            // handle square root operations directly
+            const result = round(Math.sqrt(parseFloat(state.currentValue)), 15);
+            // if (!isLastCharOperator(state.expression)) {
             return {
-                operator: "sqrt",
-                previousValue: "0",
-                currentValue: "",
-                expression: `${state.expression} √`,
+                ...state,
+                currentValue: `${result}`,
+                expression: `sqrt(${state.currentValue})`,
+                // operator: "sqrt",
+                // previousValue: "0",
+                // currentValue: "",
+                // expression: `${state.expression} √`,
                 };
-            }
+            // }
             return state;
 
         case "pi":
