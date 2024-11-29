@@ -40,29 +40,62 @@ export const handleBackspace = (state) => {
     return { currentValue: "0", expression: "" };
 };
 
+const handleOperator = (value, state) => {
+    // Prevent operator if no valid number is entered
+    if (state.currentValue === "0" && state.expression === "") {
+        return state;
+    }
+
+    return {
+        operator: value,
+        previousValue: state.currentValue,
+        currentValue: "0",
+        expression: `${state.expression} ${value} `,
+    };
+};
+
+
 const handleEqual = (state) => {
+    // Prevent calculation if the expression is incomplete
+    if (state.expression.trim() === "" || /[+\-*/%]$/.test(state.expression)) {
+        return state;
+    }
+
     try {
-        if (/\/ 0($|\D)/.test(state.expression)) {
-            return {
-                currentValue: "Can't divide by 0",
-                expression: "Can't divide by 0",
-                operator: null,
-                previousValue: null,
-                result: "",
-            };
-        }
         const result = evaluate(state.expression);
         return {
             currentValue: `${result}`,
             expression: `${result}`,
             operator: null,
             previousValue: null,
-            result: "", 
+            result: "",
         };
     } catch (error) {
         return state;
     }
 };
+//     try {
+//         if (/\/ 0($|\D)/.test(state.expression)) {
+//             return {
+//                 currentValue: "Can't divide by 0",
+//                 expression: "Can't divide by 0",
+//                 operator: null,
+//                 previousValue: null,
+//                 result: "",
+//             };
+//         }
+//         const result = evaluate(state.expression);
+//         return {
+//             currentValue: `${result}`,
+//             expression: `${result}`,
+//             operator: null,
+//             previousValue: null,
+//             result: "", 
+//         };
+//     } catch (error) {
+//         return state;
+//     }
+// };
 
 // calculator function
 const calculator = (type, value, state) => {
@@ -82,12 +115,13 @@ const calculator = (type, value, state) => {
                 expression: `${state.expression} * 0.01`,
             };
         case "operator":
-            return {
-                operator: value,
-                previousValue: state.currentValue,
-                currentValue: state.currentValue,
-                expression: `${state.expression} ${value} `,
-            };
+            return handleOperator(value, state);
+            // return {
+            //     operator: value,
+            //     previousValue: state.currentValue,
+            //     currentValue: state.currentValue,
+            //     expression: `${state.expression} ${value} `,
+            // };
         case "equal":
             return handleEqual(state);
         case "backspace":
