@@ -51,8 +51,8 @@ export default class App extends Component {
 
         <View style={styles.buttonArea}>
           <Row>
-            <Button text="√" theme="extra" onPress={() => this.HandleTap("operator", "sqrt")} />
-            <Button text="π" theme="extra" onPress={() => this.HandleTap("operator", "pi")} />
+            <Button text="√" theme="extra" onPress={() => this.HandleTap("sqrt")} />
+            <Button text="π" theme="extra" onPress={() => this.HandleTap("pi")} />
             <Button iconName="chevron-up" theme="extra" onPress={() => this.HandleTap("operator", "^")} />
             <Button iconName="exclamation" theme="extra" onPress={() => this.HandleTap("operator", "!")} />
           </Row>

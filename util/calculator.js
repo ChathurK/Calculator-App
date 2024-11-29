@@ -1,6 +1,6 @@
 /* IM/2021/001 - Kumarasingha K.A.C. */
 
-import { evaluate } from "mathjs";
+import { evaluate, re } from "mathjs";
 
 export const initialState = {
     currentValue: "0",
@@ -58,11 +58,19 @@ const handleOperator = (value, state) => {
 const handleEqual = (state) => {
     // Prevent calculation if the expression is incomplete
     if (state.expression.trim() === "" || /[+\-*/%]$/.test(state.expression)) {
-        return state;
+        return state; // no action if the expression is incomplete
     }
 
     try {
-        const result = evaluate(state.expression);
+        let result = "";
+        if (state.operator === "sqrt") {
+            const number = parseFloat(state.currentValue);
+            result = Math.sqrt(number);
+        } else {
+            result = evaluate(state.expression);
+        }
+        
+        // const result = evaluate(state.expression);
         return {
             currentValue: `${result}`,
             expression: `${result}`,
@@ -102,6 +110,19 @@ const calculator = (type, value, state) => {
     switch (type) {
         case "number":
             return handleNumber(value, state);
+        case "sqrt":
+            return {
+                operator: "sqrt",
+                previousValue: "0",
+                currentValue: "",
+                expression: `${state.expression} √`,
+            };
+
+        case "pi":
+            return {
+                currentValue: `${Math.PI}`,
+                expression: `${state.expression} ${Math.PI}`,
+            };
         case "clear":
             return initialState;
         case "posneg":
