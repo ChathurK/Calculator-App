@@ -1,6 +1,6 @@
 /* IM/2021/001 - Kumarasingha K.A.C. */
 
-import { evaluate, re } from "mathjs";
+import { evaluate, round } from "mathjs";
 
 export const initialState = {
     currentValue: "0",
@@ -18,6 +18,10 @@ export const formatNumber = (num) => {
 
 // handle numerical inputs.
 export const handleNumber = (value, state) => {
+    // reset input to 15 digits
+    if (state.currentValue.replace(/\D/g, '').length >= 15) {
+        return state;
+    }
     // if the current value in the state is 0, set the current value to the input value.
     if (state.currentValue === "0" && state.operator === null) {
         return { currentValue: `${value}`, expression: `${value}` };
@@ -70,7 +74,9 @@ const handleEqual = (state) => {
             result = evaluate(state.expression);
         }
         
-        // const result = evaluate(state.expression);
+        // Round the result to 2 decimal places
+        result = round(result, 15);
+
         return {
             currentValue: `${result}`,
             expression: `${result}`,
