@@ -2,7 +2,7 @@
 
 import React, { Component } from "react";
 import { StatusBar } from "expo-status-bar";
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import { SafeAreaView, StyleSheet, Text, View, ScrollView } from "react-native";
 import Button from "./components/button";
 import Row from "./components/row";
 import calculator, { initialState,formatNumber } from "./util/calculator";
@@ -41,12 +41,23 @@ export default class App extends Component {
       <SafeAreaView style={styles.window}>
         <StatusBar style="auto" />
         <View style={styles.textArea}>
+          <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContainer}>
           <Text style={styles.primaryTextArea}>
             {this.state.expression.split(" ").map(formatNumber).join(" ")}
           </Text>
+            </ScrollView>
+            
+          <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.scrollContainer}>
           <Text style={styles.secondaryTextArea}>
             {this.state.result}
-          </Text>
+            </Text>
+          </ScrollView>
         </View>
 
         <View style={styles.buttonArea}>
@@ -108,6 +119,7 @@ const styles = StyleSheet.create({
     backgroundColor: myColors.primary,
     flex: 1,
     justifyContent: "flex-end",
+    padding: 20,
   },
   buttonArea: {
     borderRadius: 20,
@@ -115,20 +127,21 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     padding: 5,
   },
+  scrollContainer: {
+    flexGrow: 1, // ensure the content stretches horizontally
+    justifyContent: "flex-end",
+    alignItems: "flex-end",
+  },
   primaryTextArea: {
     color: myColors.textSecondary,
     fontSize: 64,
     textAlign: "right",
-    marginTop: 10,
-    marginRight: 20,
-    marginLeft: 10,
+    whiteSpace: "nowrap", // ensure text stays on one line
   },
   secondaryTextArea: {
     color: myColors.textPrimary,
     fontSize: 48,
     textAlign: "right",
-    marginRight: 20,
-    marginBottom: 10,
-    marginLeft: 10,
+    whiteSpace: "nowrap", 
   },
 });

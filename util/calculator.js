@@ -82,28 +82,6 @@ const handleEqual = (state) => {
         return state;
     }
 };
-//     try {
-//         if (/\/ 0($|\D)/.test(state.expression)) {
-//             return {
-//                 currentValue: "Can't divide by 0",
-//                 expression: "Can't divide by 0",
-//                 operator: null,
-//                 previousValue: null,
-//                 result: "",
-//             };
-//         }
-//         const result = evaluate(state.expression);
-//         return {
-//             currentValue: `${result}`,
-//             expression: `${result}`,
-//             operator: null,
-//             previousValue: null,
-//             result: "", 
-//         };
-//     } catch (error) {
-//         return state;
-//     }
-// };
 
 // calculator function
 const calculator = (type, value, state) => {
@@ -137,12 +115,6 @@ const calculator = (type, value, state) => {
             };
         case "operator":
             return handleOperator(value, state);
-            // return {
-            //     operator: value,
-            //     previousValue: state.currentValue,
-            //     currentValue: state.currentValue,
-            //     expression: `${state.expression} ${value} `,
-            // };
         case "equal":
             return handleEqual(state);
         case "backspace":
