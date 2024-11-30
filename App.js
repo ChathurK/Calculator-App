@@ -10,17 +10,19 @@ import { myColors } from "./styles/colors";
 import { evaluate, format } from "mathjs";
 
 // create class component of App
+// it includes values like expression, result, currentValue
 export default class App extends Component {
+  // set initial state
   state = initialState;
 
   // handle tap method
   HandleTap = (type, value) => {
     this.setState((state) => {
-      const newState = calculator(type, value, state);
+      const newState = calculator(type, value, state);  // compute a new state
       let result = "";
       try {
         // Check if the expression contains a division by zero
-        if (/\/ 0($|\D)/.test(newState.expression)) {
+        if (/\/ 0($|\D)/.test(newState.expression)) { // test if the expression contains a division by zero
           result = "Can't divide by 0";
         } else {
           result = evaluate(newState.expression);
@@ -29,9 +31,9 @@ export default class App extends Component {
         result = "";
       }
 
-      // clear the result field after setting the new state
+      // clear the result field if the type is equal
       if (type === "equal") {
-        return { ...newState, result: "" };
+        return { ...newState, result: "" }; // spread operator is used to copy properties from one object to another
       }
 
       return { ...newState, result };
@@ -40,6 +42,7 @@ export default class App extends Component {
 
   // render method
   render() {
+    // format the current value and result
     const formattedCurrentValue = this.state.currentValue.toLocaleString();
     const formattedResult = this.state.result ? this.state.result.toLocaleString(navigator.language, { maximumFractionDigits: 2 }) : "";
 
@@ -49,7 +52,7 @@ export default class App extends Component {
         <View style={styles.textArea}>
           <ScrollView
             horizontal={true}
-            showsHorizontalScrollIndicator={false}
+            showsHorizontalScrollIndicator={true}
             contentContainerStyle={styles.scrollContainer}>
           <Text style={styles.primaryTextArea}>
             {this.state.expression.split(" ").map(formatNumber).join(" ")}

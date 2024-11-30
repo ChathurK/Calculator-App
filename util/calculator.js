@@ -16,14 +16,14 @@ export const formatNumber = (num) => {
     return decimal ? `${formattedInteger}.${decimal}` : formattedInteger;
 }
 
-// helper function to check if the last character is an operator.
+// helper function to check if the last character is an operator. This ensures operators arn't applied consecutively.
 const isLastCharOperator = (expression) => {
     return /[+\-*/%!^]$/.test(expression.trim());
 };
 
 // handle numerical inputs.
 export const handleNumber = (value, state) => {
-    // reset input to 15 digits
+    // ensure that the calculator's state does not exceed 15 digits
     if (state.currentValue.replace(/\D/g, '').length >= 15) {
         return state;
     }
@@ -61,6 +61,7 @@ export const handleNumber = (value, state) => {
     };
 };
 
+// remove the last character from the current value and expression.
 export const handleBackspace = (state) => {
     if (state.currentValue.length > 1) {
         return {
@@ -77,7 +78,7 @@ const handleOperator = (value, state) => {
         return state;
     }
 
-    // Ensure only one binary operator is allowed consecutively
+    // Ensure only one operator is allowed consecutively
     const expression = state.expression.trim();
     if (isLastCharOperator(expression)) {
         return {
@@ -122,7 +123,6 @@ const handleEqual = (state) => {
             expression: `${result}`,
             operator: null,
             previousValue: null,
-            // result: "",
         };
     } catch (error) {
         return state;
@@ -137,17 +137,11 @@ const calculator = (type, value, state) => {
         case "sqrt":
             // handle square root operations directly
             const result = round(Math.sqrt(parseFloat(state.currentValue)), 15);
-            // if (!isLastCharOperator(state.expression)) {
             return {
                 ...state,
                 currentValue: `${result}`,
                 expression: `sqrt(${state.currentValue})`,
-                // operator: "sqrt",
-                // previousValue: "0",
-                // currentValue: "",
-                // expression: `${state.expression} √`,
                 };
-            // }
             return state;
 
         case "pi":
